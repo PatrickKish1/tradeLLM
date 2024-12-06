@@ -1,0 +1,11 @@
+flask==3.1.0
+groq==0.4.1
+routes==2.5.1
+utils==1.0.2
+python-dotenv==1.0.1
+uvicorn==0.31.1
+Flask-RESTful==0.3.10
+flask-swagger-ui==4.11.1
+aiohttp==3.10.6
+httpcore==1.0.6
+httpx==0.27.2

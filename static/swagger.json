@@ -1,0 +1,67 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "TradeLLM API",
+      "version": "1.0.0",
+      "description": "API documentation for TradeLLM system"
+    },
+    "paths": {
+      "/chat": {
+        "post": {
+          "summary": "Process trading queries",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string",
+                      "description": "User query for trading analysis"
+                    }
+                  },
+                  "required": ["query"]
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "summary": {
+                        "type": "string"
+                      },
+                      "detailed_responses": {
+                        "type": "object"
+                      },
+                      "confidence_score": {
+                        "type": "number"
+                      },
+                      "trade_recommendations": {
+                        "type": "object"
+                      },
+                      "market_data": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "500": {
+              "description": "Internal server error"
+            }
+          }
+        }
+      }
+    }
+  }
