@@ -1,67 +1,135 @@
 {
-    "openapi": "3.0.0",
-    "info": {
-      "title": "TradeLLM API",
-      "version": "1.0.0",
-      "description": "API documentation for TradeLLM system"
-    },
-    "paths": {
-      "/chat": {
-        "post": {
-          "summary": "Process trading queries",
-          "requestBody": {
-            "required": true,
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Chat API",
+    "description": "API for interacting with an LLM-powered chat system using Groq",
+    "version": "1.0.0",
+    "contact": {
+      "name": "API Support"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/api/v1/chat": {
+      "post": {
+        "summary": "Send a chat message",
+        "description": "Send a query to the chat system and receive an AI-generated response",
+        "operationId": "createChatMessage",
+        "tags": ["Chat"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChatRequest"
+              },
+              "example": {
+                "query": "What is the capital of France?"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "query": {
-                      "type": "string",
-                      "description": "User query for trading analysis"
-                    }
-                  },
-                  "required": ["query"]
+                  "$ref": "#/components/schemas/ChatResponse"
+                },
+                "example": {
+                  "status": "success",
+                  "response": "The capital of France is Paris."
                 }
               }
             }
           },
-          "responses": {
-            "200": {
-              "description": "Successful response",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "type": "object",
-                    "properties": {
-                      "summary": {
-                        "type": "string"
-                      },
-                      "detailed_responses": {
-                        "type": "object"
-                      },
-                      "confidence_score": {
-                        "type": "number"
-                      },
-                      "trade_recommendations": {
-                        "type": "object"
-                      },
-                      "market_data": {
-                        "type": "object"
-                      }
-                    }
-                  }
+          "400": {
+            "description": "Bad request - missing or invalid parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "status": "error",
+                  "message": "Missing 'query' field"
                 }
               }
-            },
-            "400": {
-              "description": "Bad request"
-            },
-            "500": {
-              "description": "Internal server error"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                },
+                "example": {
+                  "status": "error",
+                  "message": "An error occurred while processing your request"
+                }
+              }
             }
           }
         }
       }
     }
-  }
+  },
+  "components": {
+    "schemas": {
+      "ChatRequest": {
+        "type": "object",
+        "required": ["query"],
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "The user's input query or message",
+            "minLength": 1
+          }
+        }
+      },
+      "ChatResponse": {
+        "type": "object",
+        "required": ["status", "response"],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["success"],
+            "description": "Response status indicator"
+          },
+          "response": {
+            "type": "string",
+            "description": "The AI-generated response to the query"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "required": ["status", "message"],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["error"],
+            "description": "Error status indicator"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message describing what went wrong"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Chat",
+      "description": "Chat interaction endpoints"
+    }
+  ]
+}
