@@ -1,7 +1,7 @@
 from flask import request
 from flask_restful import Resource
 from loguru import logger
-from utils.llm_util import LLMService
+from utils.llm_util_1 import LLMService
 
 class Chat(Resource):
     def __init__(self):

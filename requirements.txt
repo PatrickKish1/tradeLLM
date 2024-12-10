@@ -10,3 +10,6 @@ aiohttp==3.10.6
 httpcore==1.0.6
 httpx==0.27.2
 scikit-learn
+hyperliquid-python-sdk==0.9.0
+pydantic==2.10.3
+pydantic-core==2.27.1

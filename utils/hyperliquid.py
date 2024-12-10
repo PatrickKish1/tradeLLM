@@ -1,9 +1,11 @@
 from typing import Dict
-
+from hyperliquid.info import Info
+from hyperliquid.utils import constants
 
 class HyperliquidClient:
     def __init__(self):
-        self.base_url = "https://api.hyperliquid.xyz"
+        info = Info(constants.TESTNET_API_URL, skip_ws=True)
+        self.base_url = "https://api.hyperliquid.xyz/info"
     
     def get_market_data(self, symbol: str) -> Dict:
         """
