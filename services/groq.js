@@ -141,16 +141,25 @@ class GroqService {
    * Extract market symbols from message
    * @private
    */
-  extractSymbols(message) {
+  extractQueryDetails(message) {
+    // Extract symbols
     const symbolPattern = /\((X|S|C):([^)]+)\)/g;
-    const matches = [...message.matchAll(symbolPattern)];
-    
-    return matches.map(match => ({
-      type: match[1],
-      symbol: match[2],
-      marketType: this.getMarketType(match[1])
+    const symbols = [...message.matchAll(symbolPattern)].map(match => ({
+        type: match[1],
+        symbol: match[2],
+        marketType: this.getMarketType(match[1])
     }));
-  }
+
+    // Extract date - look for common date formats
+    const datePattern = /\b\d{4}-\d{2}-\d{2}\b|\b\d{2}\/\d{2}\/\d{4}\b/;
+    const dateMatch = message.match(datePattern);
+    const date = dateMatch ? dateMatch[0] : null;
+
+    return {
+        symbols,
+        date
+    };
+}
 
   /**
    * Get market type from symbol prefix
@@ -188,22 +197,29 @@ class GroqService {
    * Fetch market data for symbols
    * @private
    */
-  async fetchMarketData(symbols) {
+  async fetchMarketData(symbols, date = null) {
     try {
-      const marketData = await Promise.all(
-        symbols.map(async ({ symbol, marketType }) => {
-          const data = await polygonService.getCurrentData(symbol, marketType);
-          return {
-            symbol,
-            marketType,
-            data
-          };
-        })
-      );
-      return marketData;
+        const marketData = await Promise.all(
+            symbols.map(async ({ symbol, marketType }) => {
+                let data;
+                if (date) {
+                    // If date is provided, use getDayData
+                    data = await polygonService.getDayData(symbol, marketType, date);
+                } else {
+                    // Otherwise use current data
+                    data = await polygonService.getCurrentData(symbol, marketType);
+                }
+                return {
+                    symbol,
+                    marketType,
+                    data
+                };
+            })
+        );
+        return marketData;
     } catch (error) {
-      console.error('Error fetching market data:', error);
-      throw error;
+        console.error('Error fetching market data:', error);
+        throw error;
     }
   }
 
@@ -214,7 +230,7 @@ class GroqService {
   async chatWithAssistant(message, threadId = null) {
     try {
       // Extract symbols from message
-      const symbols = this.extractSymbols(message);
+      const {symbols, date} = this.extractQueryDetails(message);
       
       // If no symbols found, process as general query
       if (symbols.length === 0) {
@@ -222,7 +238,7 @@ class GroqService {
       }
 
       // Fetch market data for all symbols
-      const marketData = await this.fetchMarketData(symbols);
+      const marketData = await this.fetchMarketData(symbols, date);
       const formattedMarketData = marketData.map(m => ({
         symbol: m.symbol,
         data: this.formatMarketData(m.data)
