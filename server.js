@@ -67,6 +67,7 @@ class TradingAIServer {
     });
 
     // Chat endpoints
+    this.app.post('/', this.handleChatRequest.bind(this));
     this.app.post('/api/chat', this.handleChatRequest.bind(this));
     this.app.get('/api/chat/history/:threadId', this.handleGetHistory.bind(this));
     this.app.delete('/api/chat/history/:threadId', this.handleClearHistory.bind(this));
