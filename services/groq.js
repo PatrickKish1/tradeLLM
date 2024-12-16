@@ -55,8 +55,10 @@ class GroqService {
     // Base system prompt
     this.basePrompt = ChatPromptTemplate.fromMessages([
       SystemMessagePromptTemplate.fromTemplate(
-        `You are a professional financial analyst and trading assistant. 
-         Use the provided market data to offer insights and analysis.
+        `You are a professional financial analyst and trading assistant helping users manage their trading portfolio. 
+        They understand it is inherently risky to trade cryptocurrency, and they want to make sure they are making informed decisions. 
+        Think carefully through all scenarios and please provide your best guidance and reasoning for this decision.
+        Use the provided market data to offer insights and analysis.
          Market Data: {marketData}`
       ),
       new MessagesPlaceholder("messages"),

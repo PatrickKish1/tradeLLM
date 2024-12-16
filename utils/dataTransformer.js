@@ -9,6 +9,7 @@ class DataTransformer {
         high: null,
         low: null,
         open: null,
+        close: null,
         timestamp: null,
         source: source
       };
@@ -25,6 +26,7 @@ class DataTransformer {
             high: quote.regularMarketDayHigh,
             low: quote.regularMarketDayLow,
             open: quote.regularMarketOpen,
+            close: quote.regularMarketClose,
             timestamp: new Date(quote.regularMarketTime * 1000).toISOString()
           };
   
@@ -32,13 +34,14 @@ class DataTransformer {
           return {
             ...baseQuote,
             symbol: quote['01. symbol'],
-            price: parseFloat(quote['05. price']),
-            change: parseFloat(quote['09. change']),
-            changePercent: parseFloat(quote['10. change percent'].replace('%', '')),
-            volume: parseInt(quote['06. volume']),
-            high: parseFloat(quote['03. high']),
+            price: parseFloat(quote['06. price']),
+            change: parseFloat(quote['10. change']),
+            changePercent: parseFloat(quote['11. change percent'].replace('%', '')),
+            volume: parseInt(quote['09. volume']),
+            high: parseFloat(quote['05. high']),
             low: parseFloat(quote['04. low']),
             open: parseFloat(quote['02. open']),
+            close: parseFloat(quote['03. close']),
             timestamp: quote['07. latest trading day']
           };
   

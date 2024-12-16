@@ -13,7 +13,8 @@ class MarketDataValidator {
         'volume',
         'high',
         'low',
-        'open'
+        'open',
+        'close',
       ];
   
       // Check required fields
