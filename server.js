@@ -26,7 +26,7 @@ class TradingAIServer {
     // Basic middleware
     this.app.use(express.json());
     this.app.use(cors({
-      origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000', 'https://pulsetrade-app.vercel.app'],
+      origin: '*',
       methods: ['GET', 'POST'],
       allowedHeaders: ['Content-Type', 'Authorization']
     }));
