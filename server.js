@@ -79,6 +79,7 @@ class TradingAIServer {
     this.app.get('/api/market/day/:symbol/:date', this.handleDayData.bind(this));
     this.app.get('/api/market/grouped/:marketType/:date', this.handleGroupedDaily.bind(this));
     this.app.get('/api/market/search', this.handleSymbolSearch.bind(this));
+    this.app.post('/api/predictions', this.handleSavePrediction.bind(this));
   }
 
   /**
@@ -277,8 +278,6 @@ class TradingAIServer {
   }
 }
 
-// Add this line to your setupRoutes() method
-this.app.post('/api/predictions', this.handleSavePrediction.bind(this));
 
   /**
    * Start the server
