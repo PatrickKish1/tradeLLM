@@ -7,6 +7,7 @@ const groqService = require('./services/groq');
 const polygonService = require('./services/polygonDataService');
 const rateLimiter = require('./middleware/rateLimiter');
 const errorHandler = require('./middleware/errorHandler');
+const mongodbService = require('./utils/mongodb');
 
 dotenv.config();
 
@@ -252,6 +253,32 @@ class TradingAIServer {
       next(error);
     }
   }
+
+  async handleSavePrediction(req, res, next) {
+  try {
+    const predictionData = req.body;
+    
+    if (!predictionData || !predictionData.symbol) {
+      return res.status(400).json({
+        error: 'Invalid prediction data',
+        requestId: req.id
+      });
+    }
+
+    const result = await mongodbService.saveToMongoDB(predictionData);
+    
+    res.status(201).json({
+      message: 'Prediction saved successfully',
+      id: result._id,
+      requestId: req.id
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+// Add this line to your setupRoutes() method
+this.app.post('/api/predictions', this.handleSavePrediction.bind(this));
 
   /**
    * Start the server
