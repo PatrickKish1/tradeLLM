@@ -39,19 +39,29 @@ async function saveToMongoDB(data) {
     // Define schema and model with explicit collection name
     const predictionSchema = new mongoose.Schema({
       symbol: String,
-      startDate: String,
-      endDate: String,
-      timespan: String,
-      mse: Number,
-      rmse: Number,
-      mae: Number,
-      accuracy: Number,
-      predictions: Array,
+      lastPrice: Number,
+      predictedPrice: Number,
+      signals: {
+        type: { type: String },
+        entry: Number,
+        prediction: Number,
+        stopLoss: Number,
+        takeProfit: Number,
+        potentialReturn: Number,
+        confidence: String
+      },
+      modelMetrics: {
+        lookbackPeriod: Number,
+        iterations: Number,
+        learningRate: Number,
+        hiddenLayers: [Number]
+      },
+      timestamp: String,
       created_at: {
         type: Date,
         default: Date.now
       }
-    }, { collection: collectionName });  // Explicitly set collection name
+    }, { collection: collectionName });
 
     // Use the current connection but specify the DB name
     const conn = mongoose.connection.useDb(dbName);
