@@ -25,7 +25,7 @@ const polygonService = require('./polygonDataService');
 class GroqService {
   constructor() {
     this.llm = new ChatGroq({
-      model: "whisper-large-v3-turbo",
+      model: "llama-3.3-70b-versatile",
       temperature: 0.7,
       maxTokens: 2048,
       apiKey: process.env.GROQ_API_KEY,
